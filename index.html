@@ -22,25 +22,32 @@
       box-shadow: 0 10px 30px rgba(0,0,0,0.6);
       width: 100%;
       max-width: 360px;
+      overflow: hideen;
     }
 
-    .display {
-      width: 100%;
-      height: 70px;
-      background: #000;
-      color: #00ff88;
-      font-size: 2.2rem;
-      text-align: right;
-      padding: 15px;
-      border-radius: 15px;
-      margin-bottom: 20px;
-      overflow-x: auto;
-      scrollbar-width: none;
-    }
+   .display {
+  width: 100%;
+  height: 70px;
+  background: #000;
+  color: #00ff88;
+  font-size: 2.2rem;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  padding: 0 15px;
+  margin-bottom: 20px;
+  
+  /* fixes */
+  border-radius: 12px;     /* smaller curve so it matches the container */
+  box-sizing: border-box;  /* avoids overflow */
+  white-space: nowrap;
+  overflow-x: auto;
+  scrollbar-width: none;
+}
 
-    .display::-webkit-scrollbar {
-      display: none;
-    }
+.display::-webkit-scrollbar {
+  display: none;
+}
 
     .buttons {
       display: grid;
@@ -107,8 +114,8 @@
     <div class="display" id="display">0</div>
     <div class="buttons">
       <button class="clear" onclick="clearDisplay()">C</button>
-      <button onclick="appendValue('/')">÷</button>
-      <button onclick="appendValue('*')">×</button>
+      <button onclick="appendValue('÷')">÷</button>
+      <button onclick="appendValue('×')">×</button>
       <button onclick="deleteLast()">⌫</button>
 
       <button onclick="appendValue('7')">7</button>
@@ -156,7 +163,8 @@
 
     function calculate() {
       try {
-        currentValue = eval(currentValue).toString();
+        let expression = currentValue.replace(/×/g, "*").replace(/÷/g, "/");
+        currentValue = eval(expression).toString();
         display.innerText = currentValue;
       } catch {
         display.innerText = "Error";
@@ -164,16 +172,16 @@
       }
     }
 
-    // ✅ Keyboard support
+    // Keyboard support
     document.addEventListener("keydown", (event) => {
       const key = event.key;
 
       if (!isNaN(key) || key === ".") {
         appendValue(key);
-      } else if (["+", "-", "*", "/"].includes(key)) {
-        appendValue(key);
+      } else if (["+", "-", "×", "÷"].includes(key)) {
+        appendValue(key === "*" ? "×" : key === "/" ? "÷" : key);
       } else if (key === "Enter" || key === "=") {
-        event.preventDefault(); // avoid form submission
+        event.preventDefault();
         calculate();
       } else if (key === "Backspace") {
         deleteLast();
