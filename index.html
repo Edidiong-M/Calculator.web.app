@@ -107,8 +107,8 @@
     <div class="display" id="display">0</div>
     <div class="buttons">
       <button class="clear" onclick="clearDisplay()">C</button>
-      <button onclick="appendValue('÷')">÷</button>
-      <button onclick="appendValue('×')">×</button>
+      <button onclick="appendValue('/')">÷</button>
+      <button onclick="appendValue('*')">×</button>
       <button onclick="deleteLast()">⌫</button>
 
       <button onclick="appendValue('7')">7</button>
@@ -170,7 +170,7 @@
 
       if (!isNaN(key) || key === ".") {
         appendValue(key);
-      } else if (["+", "-", "×", "÷"].includes(key)) {
+      } else if (["+", "-", "*", "/"].includes(key)) {
         appendValue(key);
       } else if (key === "Enter" || key === "=") {
         event.preventDefault(); // avoid form submission
